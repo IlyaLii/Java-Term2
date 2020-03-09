@@ -11,6 +11,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
     private static final String FRAME_TITLE = "Клиент мгновенных сообщений";
@@ -157,7 +159,11 @@ public class MainFrame extends JFrame {
                         "Введите текст сообщения", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
+            if (checkAdress(destinationAddress)) {
+                JOptionPane.showMessageDialog(this,
+                        "Нормально введите", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             final Socket socket = new Socket(destinationAddress, SERVER_PORT);
             final DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF(senderName);
@@ -188,5 +194,34 @@ public class MainFrame extends JFrame {
                 frame.setVisible(true);
             }
         });
+    }
+
+    public  boolean checkAdress(String str) {
+        if (str.length() != 12) { return  true; }
+        Integer temp = 0;
+        try {
+            temp = Integer.parseInt(str.substring(0,3));
+        }
+        catch (NumberFormatException e)
+        {
+            return true;
+        }
+        if (temp - 255 > 0) { return  true; }
+        for (int i = 3; i < 12; i+=3) {
+            if (str.substring(i).equals(".")) { return  true; }
+        }
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        for(int i = 4; i < 11; i+=3) {
+            try {
+                System.out.println(str.substring(i,i+2));
+                temp = Integer.parseInt(str.substring(i,i+2));
+            }
+            catch (NumberFormatException e)
+            {
+                return true;
+            }
+            a.add(temp);
+        }
+        return false;
     }
 }
