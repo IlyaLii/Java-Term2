@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_java-term2" default="compile.module.java-term2">
+  <dirname property="module.java-term2.basedir" file="${ant.file.module_java-term2}"/>
+  
+  <property name="module.jdk.home.java-term2" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.java-term2" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.java-term2" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.java-term2" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="java-term2.output.dir" value="${module.java-term2.basedir}/out/production/Java-Term2"/>
+  <property name="java-term2.testoutput.dir" value="${module.java-term2.basedir}/out/test/Java-Term2"/>
+  
+  <path id="java-term2.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="java-term2.module.production.classpath">
+    <path refid="${module.jdk.classpath.java-term2}"/>
+  </path>
+  
+  <path id="java-term2.runtime.production.module.classpath">
+    <pathelement location="${java-term2.output.dir}"/>
+  </path>
+  
+  <path id="java-term2.module.classpath">
+    <path refid="${module.jdk.classpath.java-term2}"/>
+    <pathelement location="${java-term2.output.dir}"/>
+  </path>
+  
+  <path id="java-term2.runtime.module.classpath">
+    <pathelement location="${java-term2.testoutput.dir}"/>
+    <pathelement location="${java-term2.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.java-term2">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.java-term2">
+    <patternset refid="excluded.from.module.java-term2"/>
+  </patternset>
+  
+  <path id="java-term2.module.sourcepath">
+    <dirset dir="${module.java-term2.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.java-term2" depends="compile.module.java-term2.production,compile.module.java-term2.tests" description="Compile module Java-Term2"/>
+  
+  <target name="compile.module.java-term2.production" depends="register.custom.compilers" description="Compile module Java-Term2; production classes">
+    <mkdir dir="${java-term2.output.dir}"/>
+    <javac2 destdir="${java-term2.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.java-term2}/javac">
+      <compilerarg line="${compiler.args.java-term2}"/>
+      <bootclasspath refid="java-term2.module.bootclasspath"/>
+      <classpath refid="java-term2.module.production.classpath"/>
+      <src refid="java-term2.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.java-term2"/>
+    </javac2>
+    
+    <copy todir="${java-term2.output.dir}">
+      <fileset dir="${module.java-term2.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.java-term2.tests" depends="register.custom.compilers,compile.module.java-term2.production" description="compile module Java-Term2; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.java-term2" description="cleanup module">
+    <delete dir="${java-term2.output.dir}"/>
+    <delete dir="${java-term2.testoutput.dir}"/>
+  </target>
+</project>
