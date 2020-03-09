@@ -159,7 +159,7 @@ public class MainFrame extends JFrame {
                         "Введите текст сообщения", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (checkAdress(destinationAddress)) {
+            if (ValidateIP.isValidInet4Address(destinationAddress)) {
                 JOptionPane.showMessageDialog(this,
                         "Нормально введите", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -196,32 +196,8 @@ public class MainFrame extends JFrame {
         });
     }
 
-    public  boolean checkAdress(String str) {
-        if (str.length() != 12) { return  true; }
-        Integer temp = 0;
-        try {
-            temp = Integer.parseInt(str.substring(0,3));
-        }
-        catch (NumberFormatException e)
-        {
-            return true;
-        }
-        if (temp - 255 > 0) { return  true; }
-        for (int i = 3; i < 12; i+=3) {
-            if (str.substring(i).equals(".")) { return  true; }
-        }
-        ArrayList<Integer> a = new ArrayList<Integer>();
-        for(int i = 4; i < 11; i+=3) {
-            try {
-                System.out.println(str.substring(i,i+2));
-                temp = Integer.parseInt(str.substring(i,i+2));
-            }
-            catch (NumberFormatException e)
-            {
-                return true;
-            }
-            a.add(temp);
-        }
-        return false;
+    public static boolean validate(final String ip) {
+        String PATTERN = "^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$";
+        return ip.matches(PATTERN);
     }
 }
